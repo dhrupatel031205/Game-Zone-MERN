@@ -35,26 +35,28 @@ const AuthPage = ({ type }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError("");
-
+    setServerError(""); // Reset previous errors
+  
     if (validateForm()) {
       try {
-        const response = await axios.post(`http://localhost:5000/api/${type}`, formData);
-        
+        const response = await axios.post(`http://localhost:5000/api/${type}`, formData, {
+          headers: { "Content-Type": "application/json" },
+        });
+  
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
           alert(`${type === "login" ? "Logged in" : "Signed up"} successfully!`);
-          navigate("/profile"); // Redirect to profile page
+          navigate("/profile");
         }
       } catch (error) {
-        console.error("Error:", error.response?.data?.message || "An error occurred");
-        setServerError(error.response?.data?.message || "Authentication failed.");
+        console.error("Error:", error.response?.data?.message || error.message);
+        setServerError(error.response?.data?.message || "An error occurred. Please try again.");
       }
     }
   };
+  
 
   return (
     <Container
