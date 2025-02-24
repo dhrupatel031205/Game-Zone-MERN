@@ -1,0 +1,40 @@
+/* GamingBackground.css */
+.gaming-background {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #090979, #030303, #00d4ff);
+  background-size: cover;
+  overflow: hidden;
+  z-index: -1;
+}
+
+/* Cyberpunk Grid */
+.grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 255, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.2) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: moveGrid 5s linear infinite;
+  z-index: -2;
+}
+
+@keyframes moveGrid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 50px 50px;
+  }
+}
+
+/* Neon Glow Effect */
+.neon-text {
+  color: #00ffff;
+  font-size: 3rem;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
+  text-align: center;
+  margin-top: 20vh;
+}
