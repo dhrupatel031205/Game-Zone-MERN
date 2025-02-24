@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Form, Button, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react"; // Import Eye Icons for password toggle
 
 const AuthPage = ({ type }) => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,8 @@ const AuthPage = ({ type }) => {
     username: "",
   });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(""); // To display server messages
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -32,11 +36,23 @@ const AuthPage = ({ type }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError("");
+
     if (validateForm()) {
-      alert(`${type === "login" ? "Logged in" : "Signed up"} successfully!`);
-      navigate("/home");
+      try {
+        const response = await axios.post(`http://localhost:5000/api/${type}`, formData);
+        
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          alert(`${type === "login" ? "Logged in" : "Signed up"} successfully!`);
+          navigate("/profile"); // Redirect to profile page
+        }
+      } catch (error) {
+        console.error("Error:", error.response?.data?.message || "An error occurred");
+        setServerError(error.response?.data?.message || "Authentication failed.");
+      }
     }
   };
 
@@ -69,6 +85,7 @@ const AuthPage = ({ type }) => {
         }}
       >
         <Card.Body>
+          {serverError && <div className="alert alert-danger">{serverError}</div>}
           <Form onSubmit={handleSubmit}>
             {type === "signup" && (
               <Form.Group className="mb-3">
@@ -78,12 +95,9 @@ const AuthPage = ({ type }) => {
                   value={formData.username}
                   onChange={handleChange}
                   placeholder="Enter your username"
-                  className="bg-dark border-secondary text-white placeholder-light"
-                  style={{ color: "#ffffff" }}
+                  className="bg-dark border-secondary text-white"
                 />
-                {errors.username && (
-                  <div className="text-danger mt-1">{errors.username}</div>
-                )}
+                {errors.username && <div className="text-danger mt-1">{errors.username}</div>}
               </Form.Group>
             )}
             <Form.Group className="mb-3">
@@ -93,44 +107,58 @@ const AuthPage = ({ type }) => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className="bg-dark border-secondary text-white placeholder-light"
-                style={{ color: "#ffffff" }}
+                className="bg-dark border-secondary text-white"
               />
-              {errors.email && (
-                <div className="text-danger mt-1">{errors.email}</div>
-              )}
+              {errors.email && <div className="text-danger mt-1">{errors.email}</div>}
             </Form.Group>
-            <Form.Group className="mb-3">
+
+            {/* Password Field with Toggle Option */}
+            <Form.Group className="mb-3 position-relative">
               <Form.Control
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="bg-dark border-secondary text-white placeholder-light"
-                style={{ color: "#ffffff" }}
+                className="bg-dark border-secondary text-white"
               />
-              {errors.password && (
-                <div className="text-danger mt-1">{errors.password}</div>
-              )}
+              {errors.password && <div className="text-danger mt-1">{errors.password}</div>}
+
+              {/* Show/Hide Password Button */}
+              <Button
+                variant="link"
+                className="position-absolute end-0 top-50 translate-middle-y me-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} color="#fff" /> : <Eye size={20} color="#fff" />}
+              </Button>
             </Form.Group>
+
             <motion.button
-              whileHover={{ scale: 1.1, boxShadow: "0 0 10px #0ff" }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="fw-bold btn-lg w-100"
-              style={{
-                background: "#00ffff",
-                color: "#000",
-                border: "none",
-                padding: "12px 30px",
-                fontSize: "1.2rem",
-                borderRadius: "10px",
-              }}
               type="submit"
+              style={{ background: "#00ffff", color: "#000" }}
             >
               {type === "login" ? "Log In" : "Sign Up"}
             </motion.button>
           </Form>
+          
+          {/* Login/Signup Switch */}
+          <div className="mt-3">
+            {type === "login" ? (
+              <p className="text-white">
+                Don't have an account?{" "}
+                <Link to="/signup" className="text-warning fw-bold">Sign up here</Link>
+              </p>
+            ) : (
+              <p className="text-white">
+                Already have an account?{" "}
+                <Link to="/login" className="text-warning fw-bold">Log in here</Link>
+              </p>
+            )}
+          </div>
         </Card.Body>
       </Card>
     </Container>
