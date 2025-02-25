@@ -1,7 +1,6 @@
 import React from "react";
 import { Carousel } from "react-bootstrap";
 import { motion } from "framer-motion";
-// import "./CarouselStyles.css"; // Import custom styles
 
 const slides = [
   {

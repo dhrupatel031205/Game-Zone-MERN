@@ -32,31 +32,31 @@ const Auth = ({ type }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError("");
-    setSuccessMessage(""); // Reset messages
-
+    setServerError(""); // Reset previous errors
+  
     if (validateForm()) {
       try {
         const response = await axios.post(`http://localhost:5000/api/${type}`, formData, {
           headers: { "Content-Type": "application/json" },
         });
-
+  
         if (response.data.token) {
+          console.log("Token received:", response.data.token); // Debugging step
           localStorage.setItem("token", response.data.token);
-          setSuccessMessage(`${type === "login" ? "Logged in" : "Account created successfully!"}`);
-          setTimeout(() => navigate("/profile"), 2000); // Redirect after showing message
-        } else if (response.data.message) {
-          setSuccessMessage(response.data.message);
+          alert(`${type === "login" ? "Logged in" : "Signed up"} successfully!`);
+          navigate("/profile");
+        } else {
+          console.log("No token received from server.");
         }
       } catch (error) {
+        console.error("Error:", error.response?.data?.message || error.message);
         setServerError(error.response?.data?.message || "An error occurred. Please try again.");
       }
     }
   };
-
+  
   return (
     <Container fluid className="gaming-background min-vh-100 d-flex flex-column align-items-center justify-content-center text-center">
       <motion.h1
