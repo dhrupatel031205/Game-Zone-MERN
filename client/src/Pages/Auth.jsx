@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Import Link
+import { useNavigate, Link } from "react-router-dom"; 
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Form, Button, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react"; // Import Eye Icons for password toggle
+import { Eye, EyeOff } from "lucide-react"; 
 
-const AuthPage = ({ type }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    username: "",
-  });
+const Auth = ({ type }) => {
+  const [formData, setFormData] = useState({ email: "", password: "", username: "" });
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState(""); // To display server messages
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [serverError, setServerError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // New state for success message
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -35,34 +32,33 @@ const AuthPage = ({ type }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError(""); // Reset previous errors
-  
+    setServerError("");
+    setSuccessMessage(""); // Reset messages
+
     if (validateForm()) {
       try {
         const response = await axios.post(`http://localhost:5000/api/${type}`, formData, {
           headers: { "Content-Type": "application/json" },
         });
-  
+
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
-          alert(`${type === "login" ? "Logged in" : "Signed up"} successfully!`);
-          navigate("/profile");
+          setSuccessMessage(`${type === "login" ? "Logged in" : "Account created successfully!"}`);
+          setTimeout(() => navigate("/profile"), 2000); // Redirect after showing message
+        } else if (response.data.message) {
+          setSuccessMessage(response.data.message);
         }
       } catch (error) {
-        console.error("Error:", error.response?.data?.message || error.message);
         setServerError(error.response?.data?.message || "An error occurred. Please try again.");
       }
     }
   };
-  
 
   return (
-    <Container
-      fluid
-      className="gaming-background min-vh-100 d-flex flex-column align-items-center justify-content-center text-center"
-    >
+    <Container fluid className="gaming-background min-vh-100 d-flex flex-column align-items-center justify-content-center text-center">
       <motion.h1
         className="display-4 fw-bold mb-4"
         initial={{ opacity: 0, y: -50 }}
@@ -88,6 +84,8 @@ const AuthPage = ({ type }) => {
       >
         <Card.Body>
           {serverError && <div className="alert alert-danger">{serverError}</div>}
+          {successMessage && <div className="alert alert-success">{successMessage}</div>}
+
           <Form onSubmit={handleSubmit}>
             {type === "signup" && (
               <Form.Group className="mb-3">
@@ -114,7 +112,6 @@ const AuthPage = ({ type }) => {
               {errors.email && <div className="text-danger mt-1">{errors.email}</div>}
             </Form.Group>
 
-            {/* Password Field with Toggle Option */}
             <Form.Group className="mb-3 position-relative">
               <Form.Control
                 type={showPassword ? "text" : "password"}
@@ -126,7 +123,6 @@ const AuthPage = ({ type }) => {
               />
               {errors.password && <div className="text-danger mt-1">{errors.password}</div>}
 
-              {/* Show/Hide Password Button */}
               <Button
                 variant="link"
                 className="position-absolute end-0 top-50 translate-middle-y me-2"
@@ -146,8 +142,7 @@ const AuthPage = ({ type }) => {
               {type === "login" ? "Log In" : "Sign Up"}
             </motion.button>
           </Form>
-          
-          {/* Login/Signup Switch */}
+
           <div className="mt-3">
             {type === "login" ? (
               <p className="text-white">
@@ -167,4 +162,4 @@ const AuthPage = ({ type }) => {
   );
 };
 
-export default AuthPage;
+export default Auth;

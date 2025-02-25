@@ -1,30 +1,42 @@
 const express = require("express");
-const router = express.Router();
-const User = require("../models/User"); // Ensure you have a User model
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-// Middleware to verify the token
-const authenticateUser = (req, res, next) => {
-    const token = req.header("Authorization");
-    if (!token) return res.status(401).json({ message: "Access Denied" });
+const router = express.Router();
 
-    try {
-        const verified = jwt.verify(token, "your_jwt_secret"); // Use the same secret as in login
-        req.user = verified;
-        next();
-    } catch (err) {
-        res.status(400).json({ message: "Invalid Token" });
-    }
-};
+// Signup Route
+router.post("/signup", async (req, res) => {
+  const { username, email, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "Email already in use" });
 
-// Route to get user profile
-router.get("/profile", authenticateUser, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id).select("-password"); // Exclude password
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ message: "Error fetching user data" });
-    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Login Route
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
