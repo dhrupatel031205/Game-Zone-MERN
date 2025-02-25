@@ -22,7 +22,7 @@ const Footer = () => {
       }}
     >
       <Container>
-        <h5 className="fw-bold neon-text mb-3 mt-5">Quick Links</h5>
+        <h6 className="fw-bold neon-text mb-3 mt-5 text-white">Quick Links</h6>
         <div className="d-flex flex-wrap justify-content-center gap-3">
           {[
             { name: "Home", link: "/home" },
@@ -43,7 +43,7 @@ const Footer = () => {
           ))}
         </div>
 
-        <h5 className="fw-bold neon-text mt-3">Follow Us</h5>
+        <h5 className="fw-bold neon-text mt-3 text-white">Follow Us</h5>
         <div className="d-flex justify-content-center gap-3">
           {[
             { icon: <FaFacebook />, link: "https://facebook.com" },
