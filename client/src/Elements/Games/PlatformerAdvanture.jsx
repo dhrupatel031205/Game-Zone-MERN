@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Modal from "react-modal";
 
 const GRAVITY = 1;
-const JUMP_FORCE = -15;
+const JUMP_FORCE = -20; // Increased jump force
 const SPEED = 5;
 const SCREEN_CENTER = 250; // Keeps player at the center
 
@@ -14,8 +14,8 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [platforms, setPlatforms] = useState([
-    { x: 0, y: 350, width: 400, height: 20 },
-    { x: 450, y: 320, width: 400, height: 20 },
+    { x: 0, y: 350, width: 210, height: 20 }, // Reduced width
+    { x: 500, y: 320, width: 200, height: 20 },
   ]);
 
   useEffect(() => {
@@ -86,11 +86,11 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
 
       setPlatforms((prev) => {
         if (prev[prev.length - 1].x - cameraX < 500) {
-          const randomY = 200 + Math.random() * 200; // More randomness in height
-          const randomWidth = 250 + Math.random() * 250; // More variation in width
+          const randomY = 150 + Math.random() * 200; // More randomness in height
+          const randomWidth = 150 + Math.random() * 100; // Smaller and varied width
           return [
             ...prev,
-            { x: prev[prev.length - 1].x + 350 + Math.random() * 150, y: randomY, width: randomWidth, height: 20 },
+            { x: prev[prev.length - 1].x + 400 + Math.random() * 200, y: randomY, width: randomWidth, height: 20 },
           ];
         }
         return prev;
@@ -106,8 +106,8 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
     setScore(0);
     setGameOver(false);
     setPlatforms([
-      { x: 0, y: 350, width: 400, height: 20 },
-      { x: 450, y: 320, width: 400, height: 20 },
+      { x: 0, y: 350, width: 200, height: 20 },
+      { x: 500, y: 320, width: 200, height: 20 },
     ]);
   };
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
-import PlatformerAdventure from "../Elements/Games/PlatformerAdvanture"; // Import the game
+import PlatformerAdventure from "../Elements/Games/PlatformerAdvanture"; // Import Platformer Game
+import TowerDefense from "../Elements/Games/TowerDefense"; // Import Tower Defense Game
 
 const games = [
   { 
@@ -16,15 +17,16 @@ const games = [
 
 const GamesSection = () => {
   const [selectedGame, setSelectedGame] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openGame = (game) => {
-    if (game.title === "Platformer Adventure") {
-      setSelectedGame(game);
-    }
+    setSelectedGame(game);
+    setIsModalOpen(true);
   };
 
   const closeGame = () => {
     setSelectedGame(null);
+    setIsModalOpen(false);
   };
 
   return (
@@ -55,8 +57,18 @@ const GamesSection = () => {
         ))}
       </Row>
 
-      {selectedGame && selectedGame.title === "Platformer Adventure" && (
-        <PlatformerAdventure isOpen={true} onClose={closeGame} />
+      {isModalOpen && selectedGame && (
+        <div className="game-modal-overlay">
+          <div className="game-modal">
+            {selectedGame.title === "Platformer Adventure" && (
+              <PlatformerAdventure isOpen={true} onClose={closeGame} />
+            )}
+
+            {selectedGame.title === "Tower Defense" && (
+              <TowerDefense isOpen={true} onClose={closeGame} />
+            )}
+          </div>
+        </div>
       )}
     </Container>
   );
