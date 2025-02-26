@@ -1,35 +1,31 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Modal from "react-modal";
-import "./css/PlatformerAdvanture.css"
+import "./css/PlatformerAdvanture.css";
 
 const GRAVITY = 1;
-const JUMP_FORCE = -20; // Increased jump force
+const JUMP_FORCE = -15;
 const SPEED = 5;
-const SCREEN_CENTER = 250; // Keeps player at the center
+const CLIMB_SPEED = 4;
 
 const PlatformerAdventure = ({ isOpen, onClose }) => {
-  const [player, setPlayer] = useState({ x: 50, y: 250, vy: 0, onGround: false });
+  const [player, setPlayer] = useState({ x: 150, y: 350, vy: 0, onGround: true });
   const [keys, setKeys] = useState({ left: false, right: false, jump: false });
-  const [cameraX, setCameraX] = useState(0);
+  const [cameraY, setCameraY] = useState(0);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [platforms, setPlatforms] = useState([
-    { x: 0, y: 350, width: 210, height: 20 }, // Reduced width
-    { x: 500, y: 320, width: 200, height: 20 },
+    { x: 100, y: 350, width: 250, height: 20 },
+    { x: 300, y: 250, width: 200, height: 20 },
   ]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft") setKeys((prev) => ({ ...prev, left: true }));
-      if (e.key === "ArrowRight") setKeys((prev) => ({ ...prev, right: true }));
-      if (e.key === "ArrowUp") setKeys((prev) => ({ ...prev, jump: true }));
+      setKeys((prev) => ({ ...prev, [e.key]: true }));
     };
 
     const handleKeyUp = (e) => {
-      if (e.key === "ArrowLeft") setKeys((prev) => ({ ...prev, left: false }));
-      if (e.key === "ArrowRight") setKeys((prev) => ({ ...prev, right: false }));
-      if (e.key === "ArrowUp") setKeys((prev) => ({ ...prev, jump: false }));
+      setKeys((prev) => ({ ...prev, [e.key]: false }));
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -50,20 +46,15 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
         let newVy = prev.vy + GRAVITY;
         let onGround = false;
 
-        if (keys.left) newX -= SPEED;
-        if (keys.right) newX += SPEED;
-
-        if (newX > SCREEN_CENTER) {
-          setCameraX((prevCam) => prevCam + SPEED);
-          newX = SCREEN_CENTER;
-        }
+        if (keys["ArrowLeft"]) newX -= SPEED;
+        if (keys["ArrowRight"]) newX += SPEED;
 
         for (let platform of platforms) {
           if (
-            newY + 50 >= platform.y &&
             prev.y + 50 <= platform.y &&
-            newX + 50 > platform.x - cameraX &&
-            newX < platform.x + platform.width - cameraX
+            newY + 50 >= platform.y &&
+            newX + 50 > platform.x &&
+            newX < platform.x + platform.width
           ) {
             newY = platform.y - 50;
             newVy = 0;
@@ -71,27 +62,22 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
           }
         }
 
-        if (keys.jump && onGround) newVy = JUMP_FORCE;
+        if (keys["ArrowUp"] && onGround) newVy = JUMP_FORCE;
 
-        if (newY > 400) {
+        if (newY > 600) {
           setGameOver(true);
-          return prev;
+          return { x: 150, y: 350, vy: 0, onGround: true };
         }
 
+        setCameraY(newY < 250 ? newY - 250 : 0);
         return { x: newX, y: newY, vy: newVy, onGround };
       });
 
-      if (keys.right) {
-        setScore((prev) => prev + 1);
-      }
-
       setPlatforms((prev) => {
-        if (prev[prev.length - 1].x - cameraX < 500) {
-          const randomY = 150 + Math.random() * 200; // More randomness in height
-          const randomWidth = 150 + Math.random() * 100; // Smaller and varied width
+        if (prev[prev.length - 1].y - cameraY > 100) {
           return [
             ...prev,
-            { x: prev[prev.length - 1].x + 400 + Math.random() * 200, y: randomY, width: randomWidth, height: 20 },
+            { x: 100 + Math.random() * 300, y: prev[prev.length - 1].y - 150, width: 200, height: 20 },
           ];
         }
         return prev;
@@ -99,57 +85,33 @@ const PlatformerAdventure = ({ isOpen, onClose }) => {
     }, 30);
 
     return () => clearInterval(gameLoop);
-  }, [keys, cameraX, gameOver]);
-
-  const restartGame = () => {
-    setPlayer({ x: 50, y: 250, vy: 0, onGround: false });
-    setCameraX(0);
-    setScore(0);
-    setGameOver(false);
-    setPlatforms([
-      { x: 0, y: 350, width: 200, height: 20 },
-      { x: 500, y: 320, width: 200, height: 20 },
-    ]);
-  };
+  }, [keys, cameraY, gameOver]);
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onRequestClose={onClose} 
-      className="game-modal" 
-      overlayClassName="game-overlay blur-background"
-      style={{
-        content: {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          border: 'none',
-          background: 'transparent',
-          overflow: 'hidden',
-        }
-      }}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onClose} className="game-modal" overlayClassName="game-overlay">
       <div className="game-container">
         <div className="score-display">Score: {score}</div>
         {gameOver && (
           <div className="game-over">
             <h2>Game Over!</h2>
-            <button onClick={restartGame}>Restart</button>
+            <button onClick={() => {
+              setGameOver(false);
+              setPlayer({ x: 150, y: 350, vy: 0, onGround: true });
+              setScore(0);
+              setCameraY(0);
+              setPlatforms([
+                { x: 100, y: 350, width: 250, height: 20 },
+                { x: 300, y: 250, width: 200, height: 20 },
+              ]);
+            }}>Restart</button>
           </div>
         )}
         
-        <motion.div
-          className="player"
-          animate={{ x: player.x, y: player.y }}
-          transition={{ type: "tween", ease: "linear", duration: 0.03 }}
-        />
+        <motion.div className="player" animate={{ x: player.x, y: player.y - cameraY }} transition={{ duration: 0.03 }} />
         
         {platforms.map((p, index) => (
-          <div key={index} className="platform" style={{ left: p.x - cameraX, top: p.y, width: p.width, height: p.height }} />
+          <div key={index} className="platform" style={{ left: p.x, top: p.y - cameraY, width: p.width, height: p.height }} />
         ))}
-
-        <button className="close-button" onClick={onClose}>Close</button>
       </div>
     </Modal>
   );
