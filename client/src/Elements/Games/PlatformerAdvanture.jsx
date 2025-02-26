@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Modal from "react-modal";
+import "./css/PlatformerAdvanture.css"
 
 const GRAVITY = 1;
 const JUMP_FORCE = -20; // Increased jump force

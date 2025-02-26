@@ -1,0 +1,108 @@
+.game-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .game-container {
+    position: relative;
+    width: 600px;
+    height: 450px;
+    background: linear-gradient(to bottom, #87CEEB, #228B22);
+    overflow: hidden;
+    border: 5px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Player character */
+  .player {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(to bottom, #87CEEB, #7ca37c); no-repeat ;
+    background-size: cover;
+    position: absolute;
+    border-radius: 5px;
+  
+    border: 2px solid rgb(103, 80, 80);
+  }
+  
+  /* Platforms */
+  .platform {
+    position: absolute;
+    background: #8B4513;
+    border-radius: 5px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Score Display */
+  .score-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 12px;
+    font-size: 22px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Game Over Screen */
+  .game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.7);
+  }
+  
+  .game-over h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.7);
+  }
+  
+  .game-over button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background 0.3s;
+  }
+  
+  .game-over button:hover {
+    background: darkred;
+  }
+  
+  /* Close button */
+  .close-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  
+  .close-button:hover {
+    background: darkred;
+  }
+  
+  
