@@ -27,8 +27,7 @@ const Footer = () => {
           {[
             { name: "Home", link: "/home" },
             { name: "Games", link: "/games" },
-            { name: "Leaderboard", link: "/leaderboard" },
-            { name: "Contact Us", link: "/contact" },
+            { name: "Contact Us", link: "/contactus" },
             { name: "FAQ", link: "/faq" },
             { name: "Profile", link: "/profile" },
           ].map((item, index) => (
@@ -64,9 +63,9 @@ const Footer = () => {
           ))}
         </div>
 
-        <hr style={{ borderTop: "1px solid rgba(0, 255, 255, 0.5)" }} />
+        <hr style={{ border: "1px solid rgba(0, 255, 255, 0.5)" }} />
         <motion.p className="mb-0 footer-text">
-          &copy; 2025 <FaGamepad /> Neon Gaming Zone | All Rights Reserved
+          &copy; 2025 <FaGamepad /> Gaming Zone | All Rights Reserved
         </motion.p>
       </Container>
     </motion.footer>

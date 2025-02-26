@@ -31,7 +31,7 @@ const FAQSection = () => {
         {faqs.map((faq, index) => (
           <Col key={index} md={6} className="mb-4">
             <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-              <Card style={{ background: "#111", color: "#00ffff", borderRadius: "15px", boxShadow: "0px 0px 15px rgba(0, 255, 255, 0.7)" }}>
+              <Card style={{ background: "#111", color: "#ffffff", borderRadius: "15px", boxShadow: "0px 0px 15px rgba(0, 255, 255, 0.7)" }}>
                 <Card.Body>
                   <Card.Title style={{ fontWeight: "bold", textShadow: "0px 0px 10px rgba(0, 255, 255, 1)" }}>{faq.question}</Card.Title>
                   <Card.Text>{faq.answer}</Card.Text>
