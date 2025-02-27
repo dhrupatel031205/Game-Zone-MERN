@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import "./css/TowerDefense.css"
 
-
 const TOWER_COST = 50;
 const ENEMY_SPEED = 2;
 const ENEMY_SPAWN_INTERVAL = 2000;
