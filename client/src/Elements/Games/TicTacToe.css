@@ -1,0 +1,108 @@
+.tic-tac-toe-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tic-tac-toe-container {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3);
+  }
+  
+  .game-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+  }
+  
+  .mode-selection {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .mode-btn {
+    background: #ff9800;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .mode-btn:hover {
+    background: #e68900;
+  }
+  
+  .status-message {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+  }
+  
+  .square {
+    width: 80px;
+    height: 80px;
+    background: #1e1e1e;
+    color: #00eaff;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.5);
+  }
+  
+  .square:hover {
+    background: #2a2a2a;
+  }
+  
+  .square.X {
+    color: #ff4500;
+  }
+  
+  .square.O {
+    color: #00ff00;
+  }
+  
+  .reset-btn, .close-btn {
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+  }
+  
+  .reset-btn:hover, .close-btn:hover {
+    background: #b71c1c;
+  }
+  

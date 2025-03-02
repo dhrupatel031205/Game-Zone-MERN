@@ -1,30 +1,31 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
-import PlatformerAdventure from "../Elements/Games/PlatformerAdvanture"; // Import Platformer Game
-import TowerDefense from "../Elements/Games/TowerDefense"; // Import Tower Defense Game
+import TicTacToe from "../Elements/Games/TicTacToe.jsx"; // Import Tic Tac Toe Game
+import FlappyBird from "../Elements/Games/FlappyBird.jsx"; // Import Flappy Bird Game
+// import Game2048 from "../Elements/Games/Game2048"; // Import 2048 Game
 
 const games = [
   {
     id: 1,
-    title: "Platformer Adventure",
+    title: "Tic Tac Toe",
     image:
-      "https://cdn.vectorstock.com/i/500p/69/85/seamless-old-classical-retro-video-game-background-vector-23996985.avif",
-    description: "Side-scrolling platformer like Mario.",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tic_tac_toe.svg/1920px-Tic_tac_toe.svg.png",
+    description: "Classic X and O strategy game.",
   },
   {
     id: 2,
-    title: "Tower Defense",
+    title: "Flappy Bird",
     image:
-      "https://cdn.vectorstock.com/i/500p/63/68/medieval-guard-stand-at-castle-gates-game-scene-vector-43976368.avif",
-    description: "Strategic tower placement to stop enemies.",
+      "https://wallpapers.com/images/high/flappy-bird-background-rniur917946zgmu2.webp",
+    description: "Tap to fly and avoid obstacles.",
   },
   {
     id: 3,
-    title: "Dungeon Crawler",
+    title: "2048",
     image:
-      "https://t4.ftcdn.net/jpg/10/00/35/75/240_F_1000357544_ETIXmPZVNPsGwnvH7H2bupxDUlaVocUZ.jpg",
-    description: "Explore procedurally generated dungeons.",
+      "https://cdn.dribbble.com/userupload/9032216/file/original-35cca59e61020dcd4fc68fff76f5b8a7.png?resize=1024x1024&vertical=center",
+    description: "Merge numbers to reach 2048.",
   },
 ];
 
@@ -103,12 +104,16 @@ const GamesSection = () => {
       {isModalOpen && selectedGame && (
         <div className="game-modal-overlay">
           <div className="game-modal">
-            {selectedGame.title === "Platformer Adventure" && (
-              <PlatformerAdventure isOpen={true} onClose={closeGame} />
+            {selectedGame.title === "Tic Tac Toe" && (
+              <TicTacToe isOpen={true} onClose={closeGame} />
             )}
 
-            {selectedGame.title === "Tower Defense" && (
-              <TowerDefense isOpen={true} onClose={closeGame} />
+            {selectedGame.title === "Flappy Bird" && (
+              <FlappyBird isOpen={true} onClose={closeGame} />
+            )}
+
+            {selectedGame.title === "2048" && (
+              <Game2048 isOpen={true} onClose={closeGame} />
             )}
           </div>
         </div>
